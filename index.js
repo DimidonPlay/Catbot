@@ -1,14 +1,16 @@
 const Discord = require('discord.js');
 const cat = new Discord.Client();
 var say_string
-var n
 var achat
 const fs = require('fs');
 cat.msgs = require('./chatstory.json');
 
 cat.login('NTE2MzE0MDk4NTk0NjExMjAx.Dtx37A.CcH1UM5QNl6d_PGuimlw3YIqASg');
+cat.on('ready', () => {
+    cat.user.setGame('мяч')
+});
 cat.on('message', (msg) => {
-    if (msg.guild.id = '508920768273580053') {
+    if (msg.channel.guild.id != 'Test') {
         console.log(msg.guild.id);
     if ((msg.content != '+clear§') && (msg.content.startsWith("+see§") != true)) {
     if (cat.msgs[msg.author.username] != undefined) {
@@ -70,6 +72,8 @@ cat.on('message', (msg) => {
         } else {
             if (msg.member.roles.some(r=>["Коты няшки", "Просто коты"].includes(r.name))) {
                 msg.channel.send('**User | '+say_string+'**');
+            } else {
+                msg.reply('You cant using me for chat');
             }
         }
     }
