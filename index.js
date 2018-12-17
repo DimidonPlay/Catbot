@@ -10,7 +10,7 @@ cat.login('NTE2MzE0MDk4NTk0NjExMjAx.Dtx37A.CcH1UM5QNl6d_PGuimlw3YIqASg');
 cat.on('message', (msg) => {
     if (msg.guild.id = '508920768273580053') {
         console.log(msg.guild.id);
-    if (msg.content != '+clear§') {
+    if ((msg.content != '+clear§') && (msg.content.startsWith("+see§") != true)) {
     if (cat.msgs[msg.author.username] != undefined) {
         let achat = cat.msgs[msg.author.username].msg;
         cat.msgs [msg.author.username] = {
@@ -25,6 +25,7 @@ cat.on('message', (msg) => {
     fs.writeFile('./chatstory.json', JSON.stringify(cat.msgs, null, 4), err => {
         if (err) console.log(err); else console.log('message "'+msg.content+'" saved succeful')
     })}} else {
+        if (msg.content.startsWith('+clear§')) {
         cat.msgs = cat.msgs = {
                 msg: ('`last clared by '+msg.author.username)
         }
@@ -39,7 +40,17 @@ cat.on('message', (msg) => {
         }
         fs.writeFile('./chatstory.json', JSON.stringify(cat.msgs, null, 4), err => {
             if (err) console.log(err) })*/
-    }
+    } else {
+
+        achat=msg.content;
+        msg.delete(msg.lastMessage);
+        say_string='';
+        for (var n = 0; n != (achat.length - 5); n++) {
+            say_string=say_string+achat[5+n];
+        };
+
+       console.log(cat.msgs) 
+    }}
 
     if (msg.content == '+coinflip') {
         msg.delete(msg.lastMessage);
