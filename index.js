@@ -65,13 +65,11 @@ cat.on('message', (msg) => {
         for (var n = 0; n != (achat.length - 5); n++) {
             say_string=say_string+achat[5+n];
         };
-        if (msg.member.roles.some(r=>["Кошачий вождь", "Коты модераторы"].includes(r.name))) {
+        if (msg.member.roles.some(r=>["Кошачий вождь", "Коты модераторы","Администрация"].includes(r.name))) {
             msg.channel.send('**'+say_string+'**');
         } else {
             if (msg.member.roles.some(r=>["Коты няшки", "Просто коты"].includes(r.name))) {
                 msg.channel.send('**User | '+say_string+'**');
-            } else {
-                msg.reply('You cant using me for chat');
             }
         }
     }
