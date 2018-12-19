@@ -1,81 +1,231 @@
 const Discord = require('discord.js');
 const cat = new Discord.Client();
-var say_string
-var achat
 const fs = require('fs');
-cat.msgs = require('./chatstory.json');
+cat.g = require('./game.json');
+cat.can = require('./can.json');
+var rnd;
 
+const prefix = '.'
 cat.login('NTE2MzE0MDk4NTk0NjExMjAx.Dtx37A.CcH1UM5QNl6d_PGuimlw3YIqASg');
 cat.on('ready', () => {
-    cat.user.setGame('мяч')
+    cat.user.setActivity('мяч');
+    fs.writeFile('./can.json', '{}', err => {
+        if (err) console.log(err); else console.log('all cans erased succeful')})
 });
 cat.on('message', (msg) => {
-    if (msg.channel.guild.id != 'Test') {
-        console.log(msg.guild.id);
-    if ((msg.content != '+clear§') && (msg.content.startsWith("+see§") != true)) {
-    if (cat.msgs[msg.author.username] != undefined) {
-        let achat = cat.msgs[msg.author.username].msg;
-        cat.msgs [msg.author.username] = {
-            msg: (achat+'`,`'+msg.content)
-    } 
-    } else {
-        cat.msgs [msg.author.username] = {
-            msg: ('`'+msg.content) 
-    }
-    }
-    if (msg.author.username != 'CatBot') {
-    fs.writeFile('./chatstory.json', JSON.stringify(cat.msgs, null, 4), err => {
-        if (err) console.log(err); else console.log('message "'+msg.content+'" saved succeful')
-    })}} else {
-        if (msg.content.startsWith('+clear§')) {
-        cat.msgs = cat.msgs = {
-                msg: ('`last clared by '+msg.author.username)
-        }
-        msg.delete(msg.lastMessage);
-        fs.writeFile('./chatstory.json', '{}', err => {
-            if (err) console.log(err); else console.log('messages cleared succeful')
-        })
+    if (msg.guild) {
+    const nomoney = new Discord.RichEmbed()
+    .setColor('#00FFFF')
+    .setDescription('**У тебя не хватает денег '+msg.author.username+'**');
 
-        
-        /*cat.msgs [msg.author.username] = {
-            msg: ('')
-        }
-        fs.writeFile('./chatstory.json', JSON.stringify(cat.msgs, null, 4), err => {
-            if (err) console.log(err) })*/
-    } else {
+    const nobalance = new Discord.RichEmbed()
+    .setColor('#00FFFF')
+    .setDescription('**У тебя нету монет, ты можешь писать ".free" каждые 10 мин чтобы получить 50 монет**');
 
-        achat=msg.content;
-        msg.delete(msg.lastMessage);
-        say_string='';
-        for (var n = 0; n != (achat.length - 5); n++) {
-            say_string=say_string+achat[5+n];
-        };
-
-       console.log(cat.msgs) 
-    }}
-
-    if (msg.content == '+coinflip') {
+    const arg = msg.content.slice(prefix.length).split(/ +/);
+    const com = arg.shift().toLowerCase();
+    if (msg.content.startsWith(prefix)) {
+    if (com === 'coinflip') {
         msg.delete(msg.lastMessage);
         if ((Math.round(Math.random() * (0 - 1) + 1)) == 0) {
         msg.channel.send('Выйграл');
         } else {msg.channel.send('Проиграл')}
     }
-    if ((msg.content.startsWith('§bot§')) && (msg.content.length > 5)) {
-        achat=msg.content;
+    if ((com === 'bot§') && (arg.length > 0)) {
         msg.delete(msg.lastMessage);
-        say_string='';
-        for (var n = 0; n != (achat.length - 5); n++) {
-            say_string=say_string+achat[5+n];
-        };
-        if (msg.member.roles.some(r=>["Кошачий вождь", "Коты модераторы","Администрация"].includes(r.name))) {
-            msg.channel.send('**'+say_string+'**');
+        let argt = msg.content.slice(prefix.length+com.length)
+        msg.channel.send(argt);  
+    }
+    if (msg.content === '.free') {
+        msg.delete(msg.lastMessage);
+        if (cat.can[msg.author.username] != undefined) {
+        let achat = cat.can[msg.author.username].c;
+        if (achat != 0) {
+            cat.can [msg.author.username] = {
+                c: (0)
+            }
+            let timer2 = setTimeout(function(){
+                cat.can[msg.author.username] = {
+                    c:1
+                }
+                console.log(msg.author.username+' now can use ".free"');
+            }, 600000)
+            fs.writeFile('./can.json', JSON.stringify(cat.can, null, 4), err => {
+                if (err) console.log(err)})
+            let achat = cat.g[msg.author.username].gt;
+            cat.g [msg.author.username] = {
+                gt: (achat+50)
+            }
+            fs.writeFile('./game.json', JSON.stringify(cat.g, null, 4), err => {
+                if (err) console.log(err)})
+    }
+    } else {
+        cat.can [msg.author.username] = {
+            c: (0)
+        }
+        let timer1 = setTimeout(function(){
+            cat.can[msg.author.username] = {
+                c:1
+            }
+            console.log(msg.author.username+' now can use ".free"')
+        }, 600000)
+        fs.writeFile('./can.json', JSON.stringify(cat.can, null, 4), err => {
+            if (err) console.log(err)})
+                cat.g [msg.author.username] = {
+                    gt: (50)
+                }
+                fs.writeFile('./game.json', JSON.stringify(cat.g, null, 4), err => {
+                    if (err) console.log(err)})
+    }
+    }
+    if (com === 'balance') {
+        msg.delete(msg.lastMessage);
+        if (cat.g [msg.author.username] != undefined) {
+            let achat = cat.g[msg.author.username].gt;
+            const balance = new Discord.RichEmbed()
+            .setColor('#00FFFF')
+            .setDescription('**Твой баланс: '+achat+', '+msg.author.username+'**');
+            msg.channel.send(balance)
         } else {
-            if (msg.member.roles.some(r=>["Коты няшки", "Просто коты"].includes(r.name))) {
-                msg.channel.send('**User | '+say_string+'**');
+            msg.channel.send(nobalance) 
+        }
+
+    }
+    let achat = cat.g[msg.author.username]
+if (achat != undefined) {
+    if ((com ==='roll') && (arg.length == 1)) {
+        if (!isNaN(parseInt(arg[0]))) {
+            if (cat.g[msg.author.username].gt >=arg[0]) {
+            msg.delete(msg.channel.lastMessage);
+        let min = 1
+        let max = 100
+        rnd = Math.floor(Math.random() * (max - min)) + min;
+        if (rnd > 49) {
+            if (rnd > 69) {
+                if (rnd > 89) {
+                    let achat = cat.g[msg.author.username].gt
+                    let win = new Discord.RichEmbed()
+                    .setColor('#00FFFF')
+                    .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты выйграл в 5 раз больше, твой баланс сейчас:'+(achat+(+arg[0]*4))+'**');
+                    msg.channel.send(win)
+                cat.g[msg.author.username] = {
+                    gt: (achat+(+arg[0]*4))
+                }
+                } else {
+                    let achat = cat.g[msg.author.username].gt
+                    let win = new Discord.RichEmbed()
+                    .setColor('#00FFFF')
+                    .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты выйграл в 3 раз больше, твой баланс сейчас:'+(achat+(+arg[0]*2))+'**');
+                    msg.channel.send(win)
+                cat.g[msg.author.username] = {
+                    gt: (achat+(+arg[0]*2))
+                }
+            }
             } else {
-                msg.reply('You cant using me for chat');
+                let achat = cat.g[msg.author.username].gt
+                let win = new Discord.RichEmbed()
+                .setColor('#00FFFF')
+                .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты выйграл в 2 раз больше, твой баланс сейчас:'+(achat+(+arg[0]))+'**');
+                msg.channel.send(win)
+            cat.g[msg.author.username] = {
+                gt: (achat+(+arg[0]))
+            }
+        }
+        } else {
+            let achat = cat.g[msg.author.username].gt
+            let win = new Discord.RichEmbed()
+            .setColor('#00FFFF')
+            .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты проиграл, твой баланс сейчас:'+(achat-(+arg[0]))+'**');
+            msg.channel.send(win)
+            cat.g[msg.author.username] = {
+                gt: (achat-(+arg[0]))
+            }
+        }
+        fs.writeFile('./game.json', JSON.stringify(cat.g, null, 4), err => {
+            if (err) console.log(err)})
+    } else {
+        msg.channel.send(nomoney)
+    }}
+}
+    if ((com === 'give') && (arg.length == 2)){
+        msg.delete(msg.lastMessage);
+        if (!isNaN(parseInt(arg[1]))) {
+        if ((msg.mentions.users.size) && (arg[1] > 0)) {
+            if (cat.g[msg.author.username].gt >= parseInt(arg[1])) {
+                const taggedUser = msg.mentions.users.first().username
+                const gived = new Discord.RichEmbed()
+                .setColor('#00FFFF')
+                .setDescription('**Деньги '+taggedUser+' переданы от '+msg.author.username+' успешно в количистве '+parseInt(arg[1])+'**');
+                let achat = cat.g[msg.author.username].gt
+                if (cat.g[taggedUser] != undefined) {
+                let achat2 = cat.g[taggedUser].gt
+                cat.g [msg.author.username] = {
+                    gt: (achat-parseInt(arg[1]))
+                }
+                cat.g [taggedUser] = {
+                    gt: (achat2+parseInt(arg[1]))
+                }
+                fs.writeFile('./game.json', JSON.stringify(cat.g, null, 4), err => {
+                    if (err) console.log(err)})
+                msg.channel.send(gived)
+            } else {
+                cat.g [msg.author.username] = {
+                    gt: (achat-parseInt(arg[1]))
+                }
+                cat.g [taggedUser] = {
+                    gt: (parseInt(arg[1]))
+                }
+                fs.writeFile('./game.json', JSON.stringify(cat.g, null, 4), err => {
+                    if (err) console.log(err)})
+                msg.channel.send(gived) 
+            }} else {
+                msg.channel.send(nomoney);
             }
         }
     }
+    }
+    if (com === 'help') {
+        msg.delete(msg.lastMessage);
+        const helping = new Discord.RichEmbed()
+        .setColor('#00FFFF')
+        .setAuthor('Бот от TripLex#9156','https://cdn.discordapp.com/avatars/403495587913269248/005626ae97564f87a241f119e1f8df73.png','https://steamcommunity.com/id/TripLexOriginal/')
+        .setDescription('**Команды:**')
+        .addField('**.free **','**Получить 50 монет (Раз в 10 минут)**',false)
+        .addField('**.roll <ставка> **','**Крутить колесо фортуны**',false)
+        .addField('**.balance **','**Посмотреть баланс**',false)
+        .addField('**.give <кому> <сколько>**','**Передать монеты другому пользователю**',false)
+        .addField('**.help **','**Помощь**',false);
+        msg.channel.send(helping)
+    }
+    const roleg = msg.guild.roles.find(role => role.name === "Gold user");
+    const roleh = msg.member.roles.find("name", "Gold user")
+    if (!roleg) {
+        msg.guild.createRole({
+            name:'Gold user',
+            color:'0xFFFF00',
+            permissions: []
+        }).then(function(role){
+            msg.member.addRole(roleg)
+        })
+    }
+    let achat = cat.g[msg.author.username].gt
+    if (achat > 999) {
+        if (!roleh) {
+            msg.member.addRole(roleg)
+            const ngold = new Discord.RichEmbed()
+            .setColor('#00FFFF')
+            .setDescription('**Поздравьте '+msg.author.username+', теперь у него звание Gold user**');
+            msg.channel.send(ngold);
+        }
+    } else {
+        if(roleh){
+            msg.member.removeRole(roleg)
+            const lgold = new Discord.RichEmbed()
+            .setColor('#FF0000')
+            .setDescription('**Поздравьте '+msg.author.username+' лишается звания Gold user**');
+            msg.channel.send(lgold);
+          }
+    }
 }
-});
+}  
+}});
