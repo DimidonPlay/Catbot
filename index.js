@@ -3,6 +3,8 @@ const cat = new Discord.Client();
 const fs = require('fs');
 cat.g = require('./game.json');
 cat.can = require('./can.json');
+cat.col = require('./color.json');
+var color
 var rnd;
 
 const prefix = '.'
@@ -13,13 +15,19 @@ cat.on('ready', () => {
         if (err) console.log(err); else console.log('all cans erased succeful')})
 });
 cat.on('message', (msg) => {
+    if (cat.col[msg.author.username] != undefined) {
+        let catcol = cat.col[msg.author.username].colors
+        color = catcol
+    } else {
+        color = '#FFFFFF'
+    }
     if (msg.guild) {
     const nomoney = new Discord.RichEmbed()
-    .setColor('#00FFFF')
+    .setColor(color)
     .setDescription('**У тебя не хватает денег '+msg.author.username+'**');
 
     const nobalance = new Discord.RichEmbed()
-    .setColor('#00FFFF')
+    .setColor(color)
     .setDescription('**У тебя нету монет, ты можешь писать ".free" каждые 10 мин чтобы получить 50 монет**');
 
     const arg = msg.content.slice(prefix.length).split(/ +/);
@@ -83,7 +91,7 @@ cat.on('message', (msg) => {
         if (cat.g [msg.author.username] != undefined) {
             let achat = cat.g[msg.author.username].gt;
             const balance = new Discord.RichEmbed()
-            .setColor('#00FFFF')
+            .setColor(color)
             .setDescription('**Твой баланс: '+achat+', '+msg.author.username+'**');
             msg.channel.send(balance)
         } else {
@@ -105,7 +113,7 @@ if (achat != undefined) {
                 if (rnd > 89) {
                     let achat = cat.g[msg.author.username].gt
                     let win = new Discord.RichEmbed()
-                    .setColor('#00FFFF')
+                    .setColor(color)
                     .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты выйграл в 5 раз больше, твой баланс сейчас:'+(achat+(+arg[0]*4))+'**');
                     msg.channel.send(win)
                 cat.g[msg.author.username] = {
@@ -114,7 +122,7 @@ if (achat != undefined) {
                 } else {
                     let achat = cat.g[msg.author.username].gt
                     let win = new Discord.RichEmbed()
-                    .setColor('#00FFFF')
+                    .setColor(color)
                     .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты выйграл в 3 раз больше, твой баланс сейчас:'+(achat+(+arg[0]*2))+'**');
                     msg.channel.send(win)
                 cat.g[msg.author.username] = {
@@ -124,7 +132,7 @@ if (achat != undefined) {
             } else {
                 let achat = cat.g[msg.author.username].gt
                 let win = new Discord.RichEmbed()
-                .setColor('#00FFFF')
+                .setColor(color)
                 .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты выйграл в 2 раз больше, твой баланс сейчас:'+(achat+(+arg[0]))+'**');
                 msg.channel.send(win)
             cat.g[msg.author.username] = {
@@ -134,7 +142,7 @@ if (achat != undefined) {
         } else {
             let achat = cat.g[msg.author.username].gt
             let win = new Discord.RichEmbed()
-            .setColor('#00FFFF')
+            .setColor(color)
             .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты проиграл, твой баланс сейчас:'+(achat-(+arg[0]))+'**');
             msg.channel.send(win)
             cat.g[msg.author.username] = {
@@ -154,7 +162,7 @@ if (achat != undefined) {
             if (cat.g[msg.author.username].gt >= parseInt(arg[1])) {
                 const taggedUser = msg.mentions.users.first().username
                 const gived = new Discord.RichEmbed()
-                .setColor('#00FFFF')
+                .setColor(color)
                 .setDescription('**Деньги '+taggedUser+' переданы от '+msg.author.username+' успешно в количистве '+parseInt(arg[1])+'**');
                 let achat = cat.g[msg.author.username].gt
                 if (cat.g[taggedUser] != undefined) {
@@ -187,7 +195,7 @@ if (achat != undefined) {
     if (com === 'help') {
         msg.delete(msg.lastMessage);
         const helping = new Discord.RichEmbed()
-        .setColor('#00FFFF')
+        .setColor(color)
         .setAuthor('Бот от TripLex#9156','https://cdn.discordapp.com/avatars/403495587913269248/005626ae97564f87a241f119e1f8df73.png','https://steamcommunity.com/id/TripLexOriginal/')
         .setDescription('**Команды:**')
         .addField('**.free **','**Получить 50 монет (Раз в 10 минут)**',false)
@@ -213,7 +221,7 @@ if (achat != undefined) {
         if (!roleh) {
             msg.member.addRole(roleg)
             const ngold = new Discord.RichEmbed()
-            .setColor('#00FFFF')
+            .setColor(color)
             .setDescription('**Поздравьте '+msg.author.username+', теперь у него звание Gold user**');
             msg.channel.send(ngold);
         }
@@ -221,10 +229,38 @@ if (achat != undefined) {
         if(roleh){
             msg.member.removeRole(roleg)
             const lgold = new Discord.RichEmbed()
-            .setColor('#FF0000')
+            .setColor(color)
             .setDescription('**Поздравьте '+msg.author.username+' лишается звания Gold user**');
             msg.channel.send(lgold);
           }
+    }
+    if (com === 'setcolor') {
+        var setcolor = 0
+        if(arg[0] === 'red') {
+            setcolor='#FF0000'
+        }
+        if(arg[0] === 'green') {
+            setcolor='#00FF00'
+        }
+        if(arg[0] === 'white') {
+            setcolor='#FFFFFF'
+        }
+        if(arg[0] === 'yellow') {
+            setcolor='#00FFFF'
+        }
+        if(arg[0] === 'black') {
+            setcolor='#000000'
+        }
+        if(arg[0] === 'blue') {
+            setcolor='#0000FF'
+        }
+        if(setcolor != 0) {
+            cat.col[msg.author.username] = {
+                colors: (setcolor)
+            }
+            fs.writeFile('./color.json', JSON.stringify(cat.col, null, 4), err => {
+                if (err) console.log(err)})
+        }
     }
 }
 }  
