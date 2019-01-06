@@ -216,7 +216,9 @@ if (achat != undefined) {
             msg.member.addRole(roleg)
         })
     }
-    let sachat = cat.g[msg.author.username].gt
+    let fachat = cat.g[msg.author.username].gt
+    if (fachat != undefined) {
+        let sachat = cat.g[msg.author.username].gt
     if (sachat > 999) {
         if (!roleh) {
             msg.member.addRole(roleg)
@@ -233,7 +235,7 @@ if (achat != undefined) {
             .setDescription('**Поздравьте '+msg.author.username+' лишается звания Gold user**');
             msg.channel.send(lgold);
           }
-    }
+    }}
     if (com === 'setcolor') {
         var setcolor = 0
         if(arg[0] === 'red') {
