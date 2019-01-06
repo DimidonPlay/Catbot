@@ -154,7 +154,7 @@ if (achat != undefined) {
     } else {
         msg.channel.send(nomoney)
     }}
-}
+}}
     if ((com === 'give') && (arg.length == 2)){
         msg.delete(msg.lastMessage);
         if (!isNaN(parseInt(arg[1]))) {
@@ -216,8 +216,8 @@ if (achat != undefined) {
             msg.member.addRole(roleg)
         })
     }
-    let achat = cat.g[msg.author.username].gt
-    if (achat > 999) {
+    let sachat = cat.g[msg.author.username].gt
+    if (sachat > 999) {
         if (!roleh) {
             msg.member.addRole(roleg)
             const ngold = new Discord.RichEmbed()
@@ -263,5 +263,4 @@ if (achat != undefined) {
         }
     }
 }
-}  
 }});
