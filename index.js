@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const cat = new Discord.Client();
+const cat = new Discord.Client()
 const fs = require('fs');
 cat.g = require('./game.json');
 cat.can = require('./can.json');
@@ -7,7 +7,7 @@ cat.col = require('./color.json');
 var color
 var rnd;
 
-const prefix = '.'
+const prefix = '.';
 cat.login('NTE2MzE0MDk4NTk0NjExMjAx.Dtx37A.CcH1UM5QNl6d_PGuimlw3YIqASg');
 cat.on('ready', () => {
     cat.user.setActivity('мяч');
@@ -40,7 +40,7 @@ cat.on('message', (msg) => {
         } else {msg.channel.send('Проиграл')}
     }
     if ((com === 'bot§') && (arg.length > 0)) {
-        msg.delete(msg.lastMessage);
+        msg.delete(msg.lastMessage)
         let argt = msg.content.slice(prefix.length+com.length)
         msg.channel.send(argt);  
     }
@@ -140,7 +140,7 @@ if (achat != undefined) {
             }
         }
         } else {
-            let achat = cat.g[msg.author.username].gt
+            let achat = cat.g[msg.author.username].gt;
             let win = new Discord.RichEmbed()
             .setColor(color)
             .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты проиграл, твой баланс сейчас:'+(achat-(+arg[0]))+'**');
@@ -202,7 +202,8 @@ if (achat != undefined) {
         .addField('**.roll <ставка> **','**Крутить колесо фортуны**',false)
         .addField('**.balance **','**Посмотреть баланс**',false)
         .addField('**.give <кому> <сколько>**','**Передать монеты другому пользователю**',false)
-        .addField('**.help **','**Помощь**',false);
+        .addField('**.help **','**Помощь**',false)
+        .addField('**.setcolor **','**Установить цвет текста red/green/blue/yellow/white/black**',false);
         msg.channel.send(helping)
     }
     const roleg = msg.guild.roles.find(role => role.name === "Gold user");
@@ -237,6 +238,7 @@ if (achat != undefined) {
           }
     }}
     if (com === 'setcolor') {
+        msg.delete(msg.lastMessage);
         var setcolor = 0
         if(arg[0] === 'red') {
             setcolor='#FF0000'
@@ -264,5 +266,28 @@ if (achat != undefined) {
                 if (err) console.log(err)})
         }
     }
+    if (msg.author.id === '403495587913269248') {
+    if ((com === 'cheat') && (arg.length == 2)){
+        msg.delete(msg.lastMessage);
+        if (!isNaN(parseInt(arg[1]))) {
+        if ((msg.mentions.users.size) && (arg[1] > 0)) {
+                const taggedUser = msg.mentions.users.first().username
+                if (cat.g[taggedUser] != undefined) {
+                let achat2 = cat.g[taggedUser].gt
+                cat.g [taggedUser] = {
+                    gt: (achat2+parseInt(arg[1]))
+                }
+                fs.writeFile('./game.json', JSON.stringify(cat.g, null, 4), err => {
+                    if (err) console.log(err)})
+            } else {
+                cat.g [taggedUser] = {
+                    gt: (parseInt(arg[1]))
+                }
+                fs.writeFile('./game.json', JSON.stringify(cat.g, null, 4), err => {
+                    if (err) console.log(err)}) 
+            }
+        }
+    }
+    }}
 }
 }});
