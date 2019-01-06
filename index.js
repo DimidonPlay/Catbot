@@ -216,7 +216,7 @@ if (achat != undefined) {
             msg.member.addRole(roleg)
         })
     }
-    let fachat = cat.g[msg.author.username].gt
+    let fachat = cat.g[msg.author.username]
     if (fachat != undefined) {
         let sachat = cat.g[msg.author.username].gt
     if (sachat > 999) {
