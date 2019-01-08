@@ -8,7 +8,7 @@ var color
 var rnd;
 
 const prefix = '.';
-cat.login('NTE2MzE0MDk4NTk0NjExMjAx.Dtx37A.CcH1UM5QNl6d_PGuimlw3YIqASg');
+cat.login(process.env.testvar);
 cat.on('ready', () => {
     cat.user.setActivity('мяч');
     fs.writeFile('./can.json', '{}', err => {
