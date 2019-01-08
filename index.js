@@ -15,6 +15,7 @@ cat.on('ready', () => {
         if (err) console.log(err); else console.log('all cans erased succeful')})
 });
 cat.on('message', (msg) => {
+
     if (cat.col[msg.author.username] != undefined) {
         let catcol = cat.col[msg.author.username].colors
         color = catcol
@@ -36,8 +37,8 @@ cat.on('message', (msg) => {
     if (com === 'coinflip') {
         msg.delete(msg.lastMessage);
         if ((Math.round(Math.random() * (0 - 1) + 1)) == 0) {
-        msg.channel.send('Выйграл');
-        } else {msg.channel.send('Проиграл')}
+        msg.channel.send('@'+msg.author.username+' Выйграл');
+        } else {msg.channel.send('@'+msg.author.username+'Проиграл')}
     }
     if ((com === 'bot§') && (arg.length > 0)) {
         msg.delete(msg.lastMessage)
@@ -114,7 +115,7 @@ if (achat != undefined) {
                     let achat = cat.g[msg.author.username].gt
                     let win = new Discord.RichEmbed()
                     .setColor(color)
-                    .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты выйграл в 5 раз больше, твой баланс сейчас:'+(achat+(+arg[0]*4))+'**');
+                    .setDescription(msg.author.username+'** Тебе выпало '+rnd+' и ты выйграл в 5 раз больше, твой баланс сейчас:'+(achat+(+arg[0]*4))+'**');
                     msg.channel.send(win)
                 cat.g[msg.author.username] = {
                     gt: (achat+(+arg[0]*4))
@@ -123,7 +124,7 @@ if (achat != undefined) {
                     let achat = cat.g[msg.author.username].gt
                     let win = new Discord.RichEmbed()
                     .setColor(color)
-                    .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты выйграл в 3 раз больше, твой баланс сейчас:'+(achat+(+arg[0]*2))+'**');
+                    .setDescription(msg.author.username+'** Тебе выпало '+rnd+' и ты выйграл в 3 раз больше, твой баланс сейчас:'+(achat+(+arg[0]*2))+'**');
                     msg.channel.send(win)
                 cat.g[msg.author.username] = {
                     gt: (achat+(+arg[0]*2))
@@ -133,7 +134,7 @@ if (achat != undefined) {
                 let achat = cat.g[msg.author.username].gt
                 let win = new Discord.RichEmbed()
                 .setColor(color)
-                .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты выйграл в 2 раз больше, твой баланс сейчас:'+(achat+(+arg[0]))+'**');
+                .setDescription(msg.author.username+'** Тебе выпало '+rnd+' и ты выйграл в 2 раз больше, твой баланс сейчас:'+(achat+(+arg[0]))+'**');
                 msg.channel.send(win)
             cat.g[msg.author.username] = {
                 gt: (achat+(+arg[0]))
@@ -143,7 +144,7 @@ if (achat != undefined) {
             let achat = cat.g[msg.author.username].gt;
             let win = new Discord.RichEmbed()
             .setColor(color)
-            .setDescription(msg.author.username+'**Тебе выпало '+rnd+' и ты проиграл, твой баланс сейчас:'+(achat-(+arg[0]))+'**');
+            .setDescription(msg.author.username+'** Тебе выпало '+rnd+' и ты проиграл, твой баланс сейчас:'+(achat-(+arg[0]))+'**');
             msg.channel.send(win)
             cat.g[msg.author.username] = {
                 gt: (achat-(+arg[0]))
