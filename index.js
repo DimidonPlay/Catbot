@@ -16,8 +16,8 @@ cat.on('ready', () => {
 });
 cat.on('message', (msg) => {
 
-    if (cat.col[msg.author.username] != undefined) {
-        let catcol = cat.col[msg.author.username].colors
+    if (cat.col[msg.author.id] != undefined) {
+        let catcol = cat.col[msg.author.id].colors
         color = catcol
     } else {
         color = '#FFFFFF'
@@ -47,40 +47,40 @@ cat.on('message', (msg) => {
     }
     if (msg.content === '.free') {
         msg.delete(msg.lastMessage);
-        if (cat.can[msg.author.username] != undefined) {
-        let achat = cat.can[msg.author.username].c;
+        if (cat.can[msg.author.id] != undefined) {
+        let achat = cat.can[msg.author.id].c;
         if (achat != 0) {
-            cat.can [msg.author.username] = {
+            cat.can [msg.author.id] = {
                 c: (0)
             }
             let timer2 = setTimeout(function(){
-                cat.can[msg.author.username] = {
+                cat.can[msg.author.id] = {
                     c:1
                 }
                 console.log(msg.author.username+' now can use ".free"');
             }, 600000)
             fs.writeFile('./can.json', JSON.stringify(cat.can, null, 4), err => {
                 if (err) console.log(err)})
-            let achat = cat.g[msg.author.username].gt;
-            cat.g [msg.author.username] = {
+            let achat = cat.g[msg.author.id].gt;
+            cat.g [msg.author.id] = {
                 gt: (achat+50)
             }
             fs.writeFile('./game.json', JSON.stringify(cat.g, null, 4), err => {
                 if (err) console.log(err)})
     }
     } else {
-        cat.can [msg.author.username] = {
+        cat.can [msg.author.id] = {
             c: (0)
         }
         let timer1 = setTimeout(function(){
-            cat.can[msg.author.username] = {
+            cat.can[msg.author.id] = {
                 c:1
             }
             console.log(msg.author.username+' now can use ".free"')
         }, 600000)
         fs.writeFile('./can.json', JSON.stringify(cat.can, null, 4), err => {
             if (err) console.log(err)})
-                cat.g [msg.author.username] = {
+                cat.g [msg.author.id] = {
                     gt: (50)
                 }
                 fs.writeFile('./game.json', JSON.stringify(cat.g, null, 4), err => {
@@ -89,8 +89,8 @@ cat.on('message', (msg) => {
     }
     if (com === 'balance') {
         msg.delete(msg.lastMessage);
-        if (cat.g [msg.author.username] != undefined) {
-            let achat = cat.g[msg.author.username].gt;
+        if (cat.g [msg.author.id] != undefined) {
+            let achat = cat.g[msg.author.id].gt;
             const balance = new Discord.RichEmbed()
             .setColor(color)
             .setDescription('**Твой баланс: '+achat+', '+msg.author.username+'**');
@@ -100,11 +100,11 @@ cat.on('message', (msg) => {
         }
 
     }
-    let achat = cat.g[msg.author.username]
+    let achat = cat.g[msg.author.id]
 if (achat != undefined) {
     if ((com ==='roll') && (arg.length == 1)) {
         if (!isNaN(parseInt(arg[0]))) {
-            if (cat.g[msg.author.username].gt >=arg[0]) {
+            if (cat.g[msg.author.id].gt >=arg[0]) {
             msg.delete(msg.channel.lastMessage);
         let min = 1
         let max = 100
@@ -112,41 +112,41 @@ if (achat != undefined) {
         if (rnd > 49) {
             if (rnd > 69) {
                 if (rnd > 89) {
-                    let achat = cat.g[msg.author.username].gt
+                    let achat = cat.g[msg.author.id].gt
                     let win = new Discord.RichEmbed()
                     .setColor(color)
                     .setDescription(msg.author.username+'** Тебе выпало '+rnd+' и ты выйграл в 5 раз больше, твой баланс сейчас:'+(achat+(+arg[0]*4))+'**');
                     msg.channel.send(win)
-                cat.g[msg.author.username] = {
+                cat.g[msg.author.id] = {
                     gt: (achat+(+arg[0]*4))
                 }
                 } else {
-                    let achat = cat.g[msg.author.username].gt
+                    let achat = cat.g[msg.author.id].gt
                     let win = new Discord.RichEmbed()
                     .setColor(color)
                     .setDescription(msg.author.username+'** Тебе выпало '+rnd+' и ты выйграл в 3 раз больше, твой баланс сейчас:'+(achat+(+arg[0]*2))+'**');
                     msg.channel.send(win)
-                cat.g[msg.author.username] = {
+                cat.g[msg.author.id] = {
                     gt: (achat+(+arg[0]*2))
                 }
             }
             } else {
-                let achat = cat.g[msg.author.username].gt
+                let achat = cat.g[msg.author.id].gt
                 let win = new Discord.RichEmbed()
                 .setColor(color)
                 .setDescription(msg.author.username+'** Тебе выпало '+rnd+' и ты выйграл в 2 раз больше, твой баланс сейчас:'+(achat+(+arg[0]))+'**');
                 msg.channel.send(win)
-            cat.g[msg.author.username] = {
+            cat.g[msg.author.id] = {
                 gt: (achat+(+arg[0]))
             }
         }
         } else {
-            let achat = cat.g[msg.author.username].gt;
+            let achat = cat.g[msg.author.id].gt;
             let win = new Discord.RichEmbed()
             .setColor(color)
             .setDescription(msg.author.username+'** Тебе выпало '+rnd+' и ты проиграл, твой баланс сейчас:'+(achat-(+arg[0]))+'**');
             msg.channel.send(win)
-            cat.g[msg.author.username] = {
+            cat.g[msg.author.id] = {
                 gt: (achat-(+arg[0]))
             }
         }
@@ -160,25 +160,25 @@ if (achat != undefined) {
         msg.delete(msg.lastMessage);
         if (!isNaN(parseInt(arg[1]))) {
         if ((msg.mentions.users.size) && (arg[1] > 0)) {
-            if (cat.g[msg.author.username].gt >= parseInt(arg[1])) {
-                const taggedUser = msg.mentions.users.first().username
+            if (cat.g[msg.author.id].gt >= parseInt(arg[1])) {
+                const taggedUser = msg.mentions.users.first()
                 const gived = new Discord.RichEmbed()
                 .setColor(color)
-                .setDescription('**Деньги '+taggedUser+' переданы от '+msg.author.username+' успешно в количистве '+parseInt(arg[1])+'**');
-                let achat = cat.g[msg.author.username].gt
+                .setDescription('**Деньги '+taggedUser.username+' переданы от '+msg.author.username+' успешно в количистве '+parseInt(arg[1])+'**');
+                let achat = cat.g[msg.author.id].gt
                 if (cat.g[taggedUser] != undefined) {
-                let achat2 = cat.g[taggedUser].gt
-                cat.g [msg.author.username] = {
+                let achat2 = cat.g[taggedUser.id].gt
+                cat.g [msg.author.id] = {
                     gt: (achat-parseInt(arg[1]))
                 }
-                cat.g [taggedUser] = {
+                cat.g [taggedUser.id] = {
                     gt: (achat2+parseInt(arg[1]))
                 }
                 fs.writeFile('./game.json', JSON.stringify(cat.g, null, 4), err => {
                     if (err) console.log(err)})
                 msg.channel.send(gived)
             } else {
-                cat.g [msg.author.username] = {
+                cat.g [msg.author.id] = {
                     gt: (achat-parseInt(arg[1]))
                 }
                 cat.g [taggedUser] = {
@@ -218,9 +218,9 @@ if (achat != undefined) {
             msg.member.addRole(roleg)
         })
     }
-    let fachat = cat.g[msg.author.username]
+    let fachat = cat.g[msg.author.id]
     if (fachat != undefined) {
-        let sachat = cat.g[msg.author.username].gt
+        let sachat = cat.g[msg.author.id].gt
     if (sachat > 999) {
         if (!roleh) {
             msg.member.addRole(roleg)
@@ -260,7 +260,7 @@ if (achat != undefined) {
             setcolor='#0000FF'
         }
         if(setcolor != 0) {
-            cat.col[msg.author.username] = {
+            cat.col[msg.author.id] = {
                 colors: (setcolor)
             }
             fs.writeFile('./color.json', JSON.stringify(cat.col, null, 4), err => {
@@ -272,16 +272,16 @@ if (achat != undefined) {
         msg.delete(msg.lastMessage);
         if (!isNaN(parseInt(arg[1]))) {
         if ((msg.mentions.users.size) && (arg[1] > 0)) {
-                const taggedUser = msg.mentions.users.first().username
-                if (cat.g[taggedUser] != undefined) {
-                let achat2 = cat.g[taggedUser].gt
-                cat.g [taggedUser] = {
+                const taggedUser = msg.mentions.users.first()
+                if (cat.g[taggedUser.id] != undefined) {
+                let achat2 = cat.g[taggedUser.id].gt
+                cat.g [taggedUser.id] = {
                     gt: (achat2+parseInt(arg[1]))
                 }
                 fs.writeFile('./game.json', JSON.stringify(cat.g, null, 4), err => {
                     if (err) console.log(err)})
             } else {
-                cat.g [taggedUser] = {
+                cat.g [taggedUser.id] = {
                     gt: (parseInt(arg[1]))
                 }
                 fs.writeFile('./game.json', JSON.stringify(cat.g, null, 4), err => {
