@@ -4,6 +4,7 @@ const fs = require('fs');
 cat.g = require('./game.json');
 cat.can = require('./can.json');
 cat.col = require('./color.json');
+cat.m = require('./mute.json');
 var color
 var rnd;
 
@@ -15,7 +16,14 @@ cat.on('ready', () => {
         if (err) console.log(err); else console.log('all cans erased succeful')})
 });
 cat.on('message', (msg) => {
-
+    const arg = msg.content.slice(prefix.length).split(/ +/);
+    const com = arg.shift().toLowerCase();
+    if (cat.m[msg.author.id] != undefined) {
+        var muteduser = cat.m[msg.author.id].mute;
+    } else {
+        var muteduser = false;
+    }
+    if (muteduser == false) {
     if (cat.col[msg.author.id] != undefined) {
         let catcol = cat.col[msg.author.id].colors
         color = catcol
@@ -31,8 +39,6 @@ cat.on('message', (msg) => {
     .setColor(color)
     .setDescription('**У тебя нету монет, ты можешь писать ".free" каждые 10 мин чтобы получить 50 монет**');
 
-    const arg = msg.content.slice(prefix.length).split(/ +/);
-    const com = arg.shift().toLowerCase();
     if (msg.content.startsWith(prefix)) {
     if (com === 'coinflip') {
         msg.delete(msg.lastMessage);
@@ -289,6 +295,31 @@ if (achat != undefined) {
             }
         }
     }
-    }}
+    }
 }
-}});
+}
+}}
+if (msg.author.id === '403495587913269248') {
+if ((com === 'mute') && (arg.length == 1)) {
+    if (msg.mentions.users.size) {
+        const taggedUser = msg.mentions.users.first()
+        if (cat.m[taggedUser.id] != undefined) {
+            if (cat.m[taggedUser.id].mute) {
+                cat.m[taggedUser.id] = {
+                    mute: false
+                }
+            } else {
+                cat.m[taggedUser.id] = {
+                    mute: true
+                }
+            }
+        } else {
+            cat.m[taggedUser.id] = {
+                mute: true
+            }
+        }
+        fs.writeFile('./mute.json', JSON.stringify(cat.m, null, 4), err => {
+            if (err) console.log(err)})
+    }
+}}
+});
